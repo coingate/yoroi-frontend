@@ -34,19 +34,13 @@ import { SelectedExplorer } from '../../../domain/SelectedExplorer';
 import { calculateAndFormatValue } from '../../../utils/unit-of-account';
 import classnames from 'classnames';
 import type {
-  Tx,
-  CardanoTx,
-} from '../../../../chrome/extension/ergo-connector/types';
-import type {
   CardanoConnectorSignRequest,
   SignSubmissionErrorType
 } from '../../types';
 import ArrowRight from '../../../assets/images/arrow-right.inline.svg';
 import CardanoUtxoDetails from './CardanoUtxoDetails';
-import type CardanoTxRequest from '../../../api/ada';
 
 type Props = {|
-  +tx: Tx | CardanoTx | CardanoTxRequest,
   +txData: CardanoConnectorSignRequest,
   +onCopyAddressTooltip: (string, string) => void,
   +onCancel: () => void,
@@ -472,7 +466,7 @@ class SignTxPage extends Component<Props> {
 
     const { intl } = this.context;
     const { txData, onCancel, } = this.props;
-    const { showUtxoDetails, currentWindowHeight } = form.values();
+    const { currentWindowHeight } = form.values();
 
     return (
       <>
@@ -514,9 +508,9 @@ class SignTxPage extends Component<Props> {
               />
             </div>
             <div className={styles.errorMessage}>
-            {this.props.submissionError === 'SEND_TX_ERROR' && (
-              intl.formatMessage(messages.sendError)
-            )}
+              {this.props.submissionError === 'SEND_TX_ERROR' && (
+                intl.formatMessage(messages.sendError)
+              )}
             </div>
             <div className={styles.wrapperBtn}>
               <Button

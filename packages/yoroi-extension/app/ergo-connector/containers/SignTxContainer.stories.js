@@ -132,6 +132,7 @@ const genBaseProps: {|
             }
           }],
         adaTransaction: null,
+        submissionError: null,
       },
       coinPriceStore: {
         getCurrentPrice: (_from, _to) => 5,

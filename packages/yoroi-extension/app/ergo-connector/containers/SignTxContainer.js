@@ -156,7 +156,6 @@ export default class SignTxContainer extends Component<
                 ? null
                 : uiNotifications.getTooltipActiveNotification(this.notificationElementId)
             }
-            tx={signingMessage.sign.tx}
             txData={txData}
             getTokenInfo={genLookupOrFail(this.generated.stores.tokenInfoStore.tokenInfo)}
             defaultToken={selectedWallet.publicDeriver.getParent().getDefaultToken()}
@@ -217,7 +216,7 @@ export default class SignTxContainer extends Component<
         filteredWallets: Array<PublicDeriverCache>,
         signingRequest: ?ISignRequest<any>,
         adaTransaction: ?CardanoConnectorSignRequest,
-        submissionError: ?SignSubmissionError,
+        submissionError: ?SignSubmissionErrorType,
       |},
       explorers: {|
         selectedExplorer: Map<number, SelectedExplorer>,
