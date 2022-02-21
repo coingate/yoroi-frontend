@@ -10,7 +10,7 @@ import SignTxPage from '../components/signin/SignTxPage';
 import CardanoSignTxPage from '../components/signin/CardanoSignTxPage';
 import type { InjectedOrGeneratedConnector } from '../../types/injectedPropsType';
 import type { SigningMessage, PublicDeriverCache } from '../../../chrome/extension/ergo-connector/types';
-import { genLookupOrFail, genLookupOrNull } from '../../stores/stateless/tokenHelpers';
+import { genLookupOrNull } from '../../stores/stateless/tokenHelpers';
 import type { TokenInfoMap } from '../../stores/toplevel/TokenInfoStore';
 import type { TokenRow } from '../../api/ada/lib/storage/database/primitives/tables';
 import VerticallyCenteredLayout from '../../components/layout/VerticallyCenteredLayout';
@@ -24,6 +24,8 @@ import type {
   CardanoConnectorSignRequest,
   SignSubmissionErrorType,
 } from '../types';
+import { asGetSigningKey } from '../../api/ada/lib/storage/models/PublicDeriver/traits';
+import { PublicDeriver } from '../../api/ada/lib/storage/models/PublicDeriver/index';
 
 type GeneratedData = typeof SignTxContainer.prototype.generated;
 
@@ -43,11 +45,17 @@ export default class SignTxContainer extends Component<
     window.addEventListener('unload', this.onUnload);
   }
 
-  componentWillUnmount() {
-    window.removeEventListener('unload', this.onUnload);
-  }
-
-  onConfirm: string => void = password => {
+  onConfirm: (PublicDeriver<> => (string => Promise<void>)) = deriver => async (password) => {
+    const withSigningKey = asGetSigningKey(deriver);
+    if (!withSigningKey) {
+      throw new Error(`[sign tx] no signing key`);
+    }
+    const signingKeyFromStorage = await withSigningKey.getSigningKey();
+    // will throw a WrongPasswordError
+    await withSigningKey.normalizeKey({
+      ...signingKeyFromStorage,
+      password,
+    });
     window.removeEventListener('unload', this.onUnload);
     this.generated.actions.connector.confirmSignInTx.trigger(password);
   };
@@ -112,7 +120,7 @@ export default class SignTxContainer extends Component<
             getTokenInfo={genLookupOrNull(this.generated.stores.tokenInfoStore.tokenInfo)}
             defaultToken={selectedWallet.publicDeriver.getParent().getDefaultToken()}
             network={selectedWallet.publicDeriver.getParent().getNetworkInfo()}
-            onConfirm={this.onConfirm}
+            onConfirm={(password) => this.onConfirm(selectedWallet.publicDeriver)(password)}
             onCancel={this.onCancel}
             addressToDisplayString={addr => addressToDisplayString(
               addr,
@@ -157,10 +165,10 @@ export default class SignTxContainer extends Component<
                 : uiNotifications.getTooltipActiveNotification(this.notificationElementId)
             }
             txData={txData}
-            getTokenInfo={genLookupOrFail(this.generated.stores.tokenInfoStore.tokenInfo)}
+            getTokenInfo={genLookupOrNull(this.generated.stores.tokenInfoStore.tokenInfo)}
             defaultToken={selectedWallet.publicDeriver.getParent().getDefaultToken()}
             network={selectedWallet.publicDeriver.getParent().getNetworkInfo()}
-            onConfirm={this.onConfirm}
+            onConfirm={(password) => this.onConfirm(selectedWallet.publicDeriver)(password)}
             onCancel={this.onCancel}
             addressToDisplayString={addr => addressToDisplayString(
               addr,
