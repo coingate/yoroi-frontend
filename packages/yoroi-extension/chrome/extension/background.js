@@ -1250,6 +1250,7 @@ function handleInjectorConnect(port) {
                 await withSelectedWallet(
                   tabId,
                   async (wallet) => {
+                    // try to get enough collaterals from existing UTXOs
                     const {
                       utxosToUse,
                       reorgTargetAmount
@@ -1258,6 +1259,7 @@ function handleInjectorConnect(port) {
                       pendingTxs,
                       requiredAmount,
                     );
+                    // do have enough
                     if (!reorgTargetAmount) {
                       const utxos = await transformCardanoUtxos(
                         utxosToUse,
@@ -1269,7 +1271,10 @@ function handleInjectorConnect(port) {
                       return;
                     }
 
-
+                    // not enough suitable UTXOs for collateral
+                    // see if we can re-organize the UTXOs
+                    // `utxosToUse` are UTXOs that are already picked
+                    // `reorgTargetAmount` is the amount still needed
                     const usedUtxoIds = utxosToUse.map(utxo => utxo.utxo_id);
                     try {
                       await connectorGenerateReorgTx(
@@ -1284,6 +1289,8 @@ function handleInjectorConnect(port) {
                       }
                       throw error;
                     }
+                    // we can get enough collaterals after re-organization
+                    // pop-up the UI
                     const connection = connectedSites.get(tabId);
                     if (connection == null) {
                       Logger.error(`ERR - get_collateral_utxos could not find connection with tabId = ${tabId}`);
