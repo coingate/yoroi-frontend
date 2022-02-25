@@ -65,7 +65,7 @@ export default class TrezorConnectStore
   // =================== VIEW RELATED =================== //
   /** the only observable which manages state change */
   @observable progressInfo: ProgressInfo;
-  @observable derivationIndex: number = HARD_DERIVATION_START + 0; // assume single account
+  @observable derivationIndex: number = HARD_DERIVATION_START + 1; // assume single account
   @observable mode: void | RestoreModeType;
 
   /** only in ERROR state it will hold LocalizableError object */

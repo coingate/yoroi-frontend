@@ -22,7 +22,7 @@ export type CoinTypesT = $Values<typeof CoinTypes>;
  * Defined by bip44
  * https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki#address-gap-limit
  */
-export const BIP44_SCAN_SIZE = 20;
+export const BIP44_SCAN_SIZE = 500;
 
 export const ChainDerivations = Object.freeze({
   EXTERNAL: 0,

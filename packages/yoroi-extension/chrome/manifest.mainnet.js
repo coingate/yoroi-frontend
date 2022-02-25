@@ -14,13 +14,14 @@ import { POOLS_UI_URL_FOR_YOROI, CHANGELLY_URL } from './manifestEnvs';
 
 export default (isDebug: boolean, shouldInjectConnector: boolean): * => buildManifest({
   description: 'A simple, secure and fast Cardano ADA wallet.',
-  defaultTitle: 'Yoroi',
+  defaultTitle: 'CoinGate Yoroi',
   titleOverride: true,
   contentSecurityPolicy: genCSP({
     isDev: isDebug,
     additional: {
       'connect-src': [
         serverToPermission(Servers.Primary),
+        serverToPermission(Servers.Coingate),
       ],
       'frame-src': [
         POOLS_UI_URL_FOR_YOROI,

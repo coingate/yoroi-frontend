@@ -29,7 +29,7 @@ export const networks = Object.freeze({
     Backend: {
       BackendService: environment.isTest()
         ? 'http://localhost:21000'
-        : 'https://iohk-mainnet.yoroiwallet.com',
+        : 'https://yoroi-backend.coingate.com',
       WebSocket: environment.isTest()
         ? 'ws://localhost:21000'
         : 'wss://iohk-mainnet.yoroiwallet.com:443',

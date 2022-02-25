@@ -20,6 +20,7 @@ const Ports = {
 const Servers = {
   // this allows connecting to multiple different backends for different currencies
   Primary: '*.yoroiwallet.com',
+  Coingate: '*.coingate.com',
 };
 
 module.exports = {

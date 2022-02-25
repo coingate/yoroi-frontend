@@ -73,7 +73,7 @@ export default class LedgerConnectStore
 
   // =================== VIEW RELATED =================== //
   @observable progressInfo: ProgressInfo;
-  @observable derivationIndex: number = HARD_DERIVATION_START + 0; // assume single account
+  @observable derivationIndex: number = HARD_DERIVATION_START + 1; // assume single account
   @observable mode: void | RestoreModeType;
   error: ?LocalizableError;
   hwDeviceInfo: ?HWDeviceInfo;
